@@ -1,0 +1,128 @@
+hostname: JPMSB-RPi
+rancher:
+  cloud_init:
+    datasources:
+    - configdrive:/media/config-2
+  console: debian
+  docker:
+    engine: docker-18.03.1-ce
+  network:
+    dns:
+      nameservers:
+      - 8.8.8.8
+      - 8.8.4.4
+    interfaces:
+      eth0:
+        dhcp: true
+      faixa192:
+        address: 192.168.16.8/24
+        bridge: true
+        dhcp: false
+  ssh:
+    keys:
+      dsa: |+
+        -----BEGIN DSA PRIVATE KEY-----
+        MIIBvAIBAAKBgQCjHq3vRNU5qBW7JeRCgNKvhBlu9LR/d4bHNP9X5OxIX8hYlEDl
+        cJHdmazdkCQGOblxrgN6jR/3lnUZLN++FwpAI9NqRwoGTHLdlcfC8Mc5OxAAWpmM
+        spPuy8aZyUj91ZN6B6YWqe646En+n4qWpI3zwlWJrQ9tkyRBXz+QSGaAnQIVAKYj
+        jWYyZQUJZuaoF8Isn2l24g1rAoGBAIwqZRDsTuRU0Slr4KTJ5M1BxCITMMYwbtS7
+        LqHzhibfJfyp3kMnddb8+cHtb6xpLcSNp7XK5x3lccQyEAa4hRbLCHVKhx6USyji
+        tuop3iy3yU0t7PTDK7EYI3BVvG3H0mGarmNA8Bby/3BKDbu4FUUgRL01nNLGwJ9n
+        f5sFDkGRAoGBAIQ7qB8OZssg9DTJW/v/t/QEbfrhljHV7dHDxVhJtcUj0OnbOPEL
+        IaY83aghgfQRYcrl4i+/JW7ClDQTVCCHf0o/GubzzJDo/gnZuE55p7p1DKRa219i
+        SM/kzUed4IslA1NFGWteF6os3WUJUhJhqi+QO33FMwBCjOJ5ug8gE3wFAhQ6GBz7
+        g0n5QInYTH+BGsoo29nYpw==
+        -----END DSA PRIVATE KEY-----
+      dsa-pub: |+
+        ssh-dss AAAAB3NzaC1kc3MAAACBAKMere9E1TmoFbsl5EKA0q+EGW70tH93hsc0/1fk7EhfyFiUQOVwkd2ZrN2QJAY5uXGuA3qNH/eWdRks374XCkAj02pHCgZMct2Vx8Lwxzk7EABamYyyk+7LxpnJSP3Vk3oHphap7rjoSf6fipakjfPCVYmtD22TJEFfP5BIZoCdAAAAFQCmI41mMmUFCWbmqBfCLJ9pduINawAAAIEAjCplEOxO5FTRKWvgpMnkzUHEIhMwxjBu1LsuofOGJt8l/KneQyd11vz5we1vrGktxI2ntcrnHeVxxDIQBriFFssIdUqHHpRLKOK26ineLLfJTS3s9MMrsRgjcFW8bcfSYZquY0DwFvL/cEoNu7gVRSBEvTWc0sbAn2d/mwUOQZEAAACBAIQ7qB8OZssg9DTJW/v/t/QEbfrhljHV7dHDxVhJtcUj0OnbOPELIaY83aghgfQRYcrl4i+/JW7ClDQTVCCHf0o/GubzzJDo/gnZuE55p7p1DKRa219iSM/kzUed4IslA1NFGWteF6os3WUJUhJhqi+QO33FMwBCjOJ5ug8gE3wF root@rancher
+      ecdsa: |+
+        -----BEGIN EC PRIVATE KEY-----
+        MHcCAQEEIMjI0UA1JmGDVyOmgadiD44XCuNV/EhESWrQi36R9GDyoAoGCCqGSM49
+        AwEHoUQDQgAEUVNCdblHCl+bvPZJL+i9o0dnnAunl8vq+AIElXECAyeWkVFNDxNT
+        vkWTkLzBycYGg5NhjQRt5D1NHGismqzJTw==
+        -----END EC PRIVATE KEY-----
+      ecdsa-pub: |+
+        ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBFFTQnW5Rwpfm7z2SS/ovaNHZ5wLp5fL6vgCBJVxAgMnlpFRTQ8TU75Fk5C8wcnGBoOTYY0EbeQ9TRxorJqsyU8= root@rancher
+      ed25519: |+
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+        QyNTUxOQAAACCr/BIybVNfS2EB96fO5GM9gVF+bigb/ooqTWttS7A8JwAAAJCafoS2mn6E
+        tgAAAAtzc2gtZWQyNTUxOQAAACCr/BIybVNfS2EB96fO5GM9gVF+bigb/ooqTWttS7A8Jw
+        AAAEDmZRmJWV7IG2MLNrpBMTlNXZxiZ7uMIKqOmB7wszav8qv8EjJtU19LYQH3p87kYz2B
+        UX5uKBv+iipNa21LsDwnAAAADHJvb3RAcmFuY2hlcgE=
+        -----END OPENSSH PRIVATE KEY-----
+      ed25519-pub: |+
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKv8EjJtU19LYQH3p87kYz2BUX5uKBv+iipNa21LsDwn root@rancher
+      rsa: |+
+        -----BEGIN RSA PRIVATE KEY-----
+        MIIEpAIBAAKCAQEA5Gkjp13lyVu+YjfZETfX0f3dS6uqOOKGRfocikquW6zxaAFg
+        IosTsFCbQXYXEj/PRkxs8/DFv+T6gjB21DQ77jxrRTIvWNB4X10VZArW+GBo0E2h
+        5j/QaW9hwX0ELN8bmy8GuGKyjx2n7WZn5ODQwk7Y68q3W+ipU/yo0+iewzDd/05b
+        lQwcjQ7DlxUZE1dpRTkNzLzdmBYzGU/4JXiNygPzFvS2ShXCSs1QYiQ7/RNnGfJD
+        jhPtv1njEc+OMPcjcBU10ciWhtkLeoAxfiYfmV3cIWVJMXeH1XigCqob5a5lDhw0
+        tOoioGoWxC3H1ilMynE7m6/sxRb8ft45feohOwIDAQABAoIBAFvQh6x3ai8O2fDR
+        UkhBklevHI2Wa86CAEeQyngsnPntAv0z0FkSXs+5Fy+xMIT9cWxovEMyvcrtWGWM
+        5bdXZ9/UGaqvCalB46Ex4a9dTBx7ZKaXDkVn0XcQdtM4Vb1T0d0HgkQMKIqu+RnM
+        2GaAmGoDF99wlVQ0qhxAq/zCvU7oS2fD9qhUxwcqjZGiE72vOXXsqMuFIu7lIEzj
+        AxpRwSZd5B5ccg3xZqsb6uMJrC/Tpf0hzSGYGatEznN33xEFrVetjffTWbHs1J4d
+        Va3A9WHLuq3iF7pEQsV0wsL6LkV9a/yLdQcQfSczNxkg2Yy/c0jxT26TGMWMTxkQ
+        S5zg3QECgYEA9TiAq+QOzpI4W/Phac6voxlHx8Jfro4LdJSp+may7uyA92iULTYi
+        rE6zDwefHxOk3Avxm2v0baisA6U7p9yYPg2y8ZMVqK+xYraQ8U32VzCjW5Zvx0YE
+        DpxK+PtIq5nleOfz60i2kFUOFnA5BkdXYpbVnlRPCn4U8d/yTzkLpksCgYEA7nN4
+        uye+aywIMMonRYsPQVcvPs8RZtFeUsAClJaIZ6sROXGUEs+o4GCsgUQ96PdtPile
+        i6Wv6SlGJmYQVoArmmPpF33jqF3k0QGkRZmdwWK7UFPzMtCrZdloCKCNWZlVinzX
+        9yYGmKwQr+bi7W1N1UkY7b3UpWZxjd9f29YzWtECgYEA7Qe0uHI1Lc+A0sEmPhQf
+        CdRB4gEsY5nB0OpycywaAYByGLPpptoRIeTgh8KiOHPQgzK4U7dCCU1lGBD7XQKJ
+        1lF/iqrV4LwTBovaBqWJXDYTcVA0s7Yl7cl9XrXmRJj5iqkKyX77mP/eIipPtJX5
+        Db8mtWhhDo9Yx4PkwFcvv4kCgYBEPCL2W58wB/+oBpFKY0rQReStMpAmPg+h2nRi
+        lNkf4WIicBARef83hjKXIzIcMoG+YhQ+HgHC1R7P6jEOr8rKeYDASjQVgBj0fmXF
+        zPnJ1zkG+Z8EkZYapSYSIe+RDkHeSW97uBP3KHX2ADo7+yVkvXA2yDXLxw8DrEJA
+        JIG5oQKBgQDrf1ly4YofeCNzbQ7nI/EeSEJLA3dEP14IYVRL6zHRqNduP6cyHv/m
+        XYls+X41SF5udmcs5dYLx/yuwReFXZey0XICwQ8N8xEUxNXAW1LWpCair+clY+QN
+        7y6SV23Jfx74vrNgb63yVDWgDnSbmP0ZJdhUUVQS0hkrS8+DmeFMKQ==
+        -----END RSA PRIVATE KEY-----
+      rsa-pub: |+
+        ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkaSOnXeXJW75iN9kRN9fR/d1Lq6o44oZF+hyKSq5brPFoAWAiixOwUJtBdhcSP89GTGzz8MW/5PqCMHbUNDvuPGtFMi9Y0HhfXRVkCtb4YGjQTaHmP9Bpb2HBfQQs3xubLwa4YrKPHaftZmfk4NDCTtjryrdb6KlT/KjT6J7DMN3/TluVDByNDsOXFRkTV2lFOQ3MvN2YFjMZT/gleI3KA/MW9LZKFcJKzVBiJDv9E2cZ8kOOE+2/WeMRz44w9yNwFTXRyJaG2Qt6gDF+Jh+ZXdwhZUkxd4fVeKAKqhvlrmUOHDS06iKgahbELcfWKUzKcTubr+zFFvx+3jl96iE7 root@rancher
+write_files:
+- content: |+
+    set number
+    set background=dark
+    syntax on
+    set paste
+    set noautoindent
+    set nocindent
+    set nosmartindent
+  owner: root
+  path: /root/.vimrc
+  permissions: "0600"
+- content: |+
+    * * * * * /sbin/iptables-restore /opt/regras-iptables
+  owner: root
+  path: /var/spool/cron/crontabs/root
+  permissions: "0600"
+- content: |+
+    ctrl_interface=/run/wpa_supplicant
+    update_config=1
+    network={
+            ssid="Rede Debian"
+            psk=4c817fadbfc4aac9258a6ca7841282725e1efb9dd2f248b471932781d6cfac1f
+    }
+  owner: root
+  path: /etc/wpa_supplicant/wpa_supplicant.conf
+  permissions: "0755"
+- content: |+
+    #!/bin/bash
+    wait-for-docker
+    /bin/sleep 20
+    /usr/bin/apt update
+    /usr/bin/apt -y -q upgrade
+    /usr/bin/apt -y -q install cron brigde-utils
+    /usr/sbin/cron
+    wpa_supplicant -B -D nl80211 -i wlan0 -c /etc/wpa_supplicant/wpa_supplicant.conf
+    sleep 30
+    dhclient wlan0
+    /bin/echo "O sistema operacional concluiu o inicio em $(date)" >> /opt/log/inicio.log
+    sleep 20
+  owner: root
+  path: /etc/rc.local
+  permissions: "0755"
