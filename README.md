@@ -5,4 +5,4 @@ Por padrão, o Rancher OS não vem com módulos para a rede sem fio. Entretanto 
 
 # Repository with configuration procedures of Rancher OS on Raspberry Pi 3 model B
 ## Wi-Fi network configuration
-By default, Rancher OS does not come with wireless network modules.
+By default, Rancher OS comes with no wireless network modules.
