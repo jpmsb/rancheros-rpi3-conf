@@ -1,0 +1,7 @@
+roteador=
+dispositivo=wlan0
+driver=nl80211
+wpa_supplicant_conf=/etc/wpa_supplicant/wpa_supplicant.conf
+ssid=""
+psk=
+intervalo_de_checagem=5
