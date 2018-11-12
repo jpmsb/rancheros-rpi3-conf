@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Verificar se este script já não está sendo executado
+este_processo=`basename $0`
+for processo in `ps h -o pid -C $este_processo`; do
+        if [ $processo != $$ ]; then
+                echo "Já está em execução."
+                exit 0
+        else echo "Executando..."
+        fi
+done
+
+# Procedimentos para estabelecimentos da conexão
+# bem como da reconexão em caso de perda
+. $1
+
+if [ ! "$intervalo_de_checagem" ]; then
+    echo "Falta definir o intervalo de checagem!!"
+    exit 1
+fi
+
+iniciarWiFi (){
+}
