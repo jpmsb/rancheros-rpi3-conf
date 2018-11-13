@@ -10,9 +10,37 @@ for processo in `ps h -o pid -C $este_processo`; do
         fi
 done
 
-# Procedimentos para estabelecimentos da conexão
+# Procedimentos para estabelecimento da conexão
 # bem como da reconexão em caso de perda
 . $1
+
+> $wpa_supplicant_conf
+
+if [ "$tipo" = "empresarial" ]; then
+cat << EOF >> $wpa_supplicant_conf
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+          network={
+               ssid="$ssid"
+               scan_ssid=1
+               key_mgmt=WPA-EAP
+               eap=PEAP
+               identity="$usuario"
+               password="$psk"
+               phase1="peaplabel=0"
+               phase2="auth=MSCHAPV2"
+          }
+EOF
+
+elif [ "$tipo" = "pessoal" ]; then
+cat << EOF >> $wpa_supplicant_conf
+ctrl_interface=/run/wpa_supplicant
+update_config=1
+network={
+        ssid="$ssid"
+        psk=$psk
+}
+EOF
+fi
 
 if [ ! "$intervalo_de_checagem" ]; then
     echo "Falta definir o intervalo de checagem!!"
@@ -20,4 +48,26 @@ if [ ! "$intervalo_de_checagem" ]; then
 fi
 
 iniciarWiFi (){
+    killall -9 wpa_supplicant
+    echo "Iniciando o wpa_supplicant..."
+    wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
+    # sleep 60 && dhcpcd $dispositivo
+    sleep 3 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 }
+
+ip link set $dispositivo up
+iniciarWiFi
+
+while (true)
+do
+    ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
+    if [ -z ${ip} ]; then
+        echo "Sem IP!!"
+        iniciarWiFi
+        sleep 10
+
+    else 
+        sleep $intervalo_de_checagem
+        echo "IP: $ip"
+    fi
+done
