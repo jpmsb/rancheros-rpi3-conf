@@ -21,7 +21,7 @@ iniciarWiFi (){
     echo "$(date +%T) - rodando DHCP..."
     echo "$(date +%T) - rodando DHCP..." >> /var/log/rede-wifi.log
     dhcpcd $dispositivo
-    sleep 3 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    sleep 15 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 }
 
 
