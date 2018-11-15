@@ -6,6 +6,7 @@
 ##################################################
 iniciarWiFi (){
     inicio=$(date +%s)
+    echo "Dentro de iniciarWifi: $se_esta_conectado"
     echo "$(date +%T) - subindo a rede..."
     echo "$(date +%T) - subindo a rede..." >> /var/log/rede-wifi.log
     ip link set $dispositivo down
@@ -131,7 +132,7 @@ do
     rping=$?
 
     #if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
-    if [ "$se_esta_conectado" = "Not connected." ] && [ "$tempo" -eq 120 ]; then
+    if [ "$se_esta_conectado" = "Not connected." ]; then
         echo "$(date +%T) - Não está conectado!"
         echo "$(date +%T) - Não está conectado!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
