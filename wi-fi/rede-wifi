@@ -5,6 +5,7 @@
 ################## Funcoes #######################
 ##################################################
 iniciarWiFi (){
+    inicio=$(date +%s)
     echo "$(date +%T) - subindo a rede..."
     echo "$(date +%T) - subindo a rede..." >> /var/log/rede-wifi.log
     ip link set $dispositivo down
@@ -122,13 +123,15 @@ do
     se_esta_conectado=$(iw $dispositivo link)
     nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d " ")
     DNS=$(cat /etc/resolv.conf)
+    fim=$(date +%s)
+    tempo=$((fim - inicio))
     echo "$(date +%T) - IP do roteador: $ip_roteador"
 
     ping -c 2 $ip_roteador 2>&1 >/dev/null
     rping=$?
 
     #if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
-    if [ "$se_esta_conectado" = "Not connected." ]; then
+    if [ "$se_esta_conectado" = "Not connected." ] && [ "$tempo" -eq 120 ]; then
         echo "$(date +%T) - Não está conectado!"
         echo "$(date +%T) - Não está conectado!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
