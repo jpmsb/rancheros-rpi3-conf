@@ -13,17 +13,15 @@ iniciarWiFi (){
     echo "$(date +%T) - Iniciando o wpa_supplicant..." >> /var/log/rede-wifi.log
     wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
     echo "wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
+}
 
-    echo "$(date +%T) - Esperando 120 segundos para estabelecer a conexão."
-    echo "$(date +%T) - Esperando 120 segundos para estabelecer a conexão." >> /var/log/rede-wifi.log
-    sleep 120
 
+pegarIP(){
     echo "$(date +%T) - rodando DHCP..."
     echo "$(date +%T) - rodando DHCP..." >> /var/log/rede-wifi.log
     dhcpcd $dispositivo
     sleep 15 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 }
-
 
 
 verificarScript(){
@@ -122,6 +120,7 @@ do
     ip_roteador=$(ip route | awk '/default/ { print $3 }' | head -n 1)
     se_esta_conectado=$(iw $dispositivo link)
     nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d " ")
+    DNS=$(cat /etc/resolv.conf)
     echo "$(date +%T) - IP do roteador: $ip_roteador"
     echo "$(date +%T) - IP do roteador: $ip_roteador" >> /var/log/rede-wifi.log
 
@@ -137,8 +136,11 @@ do
         sleep 10
 
     elif [ -z ${ip} ]; then
-        dhcpcd $dispositivo
+        pegarIP
         sleep 10
+
+    elif [ "$DNS" != "nameserver 8.8.8.8" ]; then
+        echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
     else 
         sleep $intervalo_de_checagem
