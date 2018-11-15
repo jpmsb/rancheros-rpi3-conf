@@ -105,7 +105,7 @@ if [ $retorno = 0 ]; then
     criar_wpa_supplicant_conf
 
 elif [ $retorno = 1 ]; then
-    echo "$(date +%T) - wpa_supplicant ja esta sendo executado. Pulando..."
+    echo "$(date +%T) - wpa_supplicant já está sendo executado. Pulando..."
   
 fi
 
@@ -114,7 +114,14 @@ fi
 while (true)
 do
     ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
-    if [ -z ${ip} ]; then
+    ip_roteador=$(ip route | awk '/default/ { print $3 }' | head -n 1)
+    echo "$(date +%T) - IP do roteador: $ip_roteador"
+
+    ping -c 2 $ip_roteador 2>&1 >/dev/null
+    rping=$?
+
+    if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
+        echo "Resultado do ping $?"
         echo "$(date +%T) - Sem IP!!"
         echo "$(date +%T) - Sem IP!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
@@ -123,6 +130,6 @@ do
 
     else 
         sleep $intervalo_de_checagem
-        echo "$(date +%T) - IP: $ip"
+        echo "$(date +%T) - IP da interface $dispositivo: $ip"
     fi
 done
