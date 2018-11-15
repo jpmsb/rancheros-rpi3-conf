@@ -23,7 +23,7 @@ iniciarWiFi (){
 
 verificarScript(){
     # Verficar se este script esta rodando
-    echo "Verificando se este script já está sendo executado..."
+    echo "$(date +%T) - Verificando se este script já está sendo executado..."
     este_processo=`basename $0`
     for processo in `ps h -o pid -C $este_processo`; do
             if [ $processo != $$ ]; then
@@ -35,7 +35,7 @@ verificarScript(){
 }
 
 verificarWPA_supplicant(){
-    echo "Verificando se o wpa_supplicant já está sendo executado..."
+    echo "$(date +%T) - Verificando se o wpa_supplicant já está sendo executado..."
     ps cax | grep wpa_supplicant > /dev/null
     if [ $? -eq 0 ]; then
         retorno=1
@@ -89,16 +89,23 @@ fi
 # Verificar se o script ta rodando
 verificarScript
 if [ $retorno = 1 ]; then
-    echo "Ja ta rodando"
+    echo "$(date +%T) - Há outra instâcia em execução. Saindo..."
     exit 0
+
+elif [ $retorno = 0 ]; then
+    echo "$(date +%T) - Executando..."
 fi
 
 
 # Verificar se o wpa_supplicant está rodando
 verificarWPA_supplicant
 if [ $retorno = 0 ]; then
-    echo "Criando $wpa_supplicant_conf..."
+    echo "$(date +%T) - wpa_supplicant não está em execução."
+    echo "$(date +%T) - Criando $wpa_supplicant_conf..."
     criar_wpa_supplicant_conf
+
+elif [ $retorno = 1 ]; then
+    echo "$(date +%T) - wpa_supplicant ja esta sendo executado. Pulando..."
   
 fi
 
