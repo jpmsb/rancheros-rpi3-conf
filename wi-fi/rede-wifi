@@ -15,7 +15,7 @@ iniciarWiFi (){
     echo "wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
 
     echo "$(date +%T) - Esperando 120 segundos para estabelecer a conexão."
-    echo "$(date +%T) - Esperando 120 segundos para estabelecer a conexão." >> /var/log/rede-wfi.log
+    echo "$(date +%T) - Esperando 120 segundos para estabelecer a conexão." >> /var/log/rede-wifi.log
     sleep 120
 
     echo "$(date +%T) - rodando DHCP..."
