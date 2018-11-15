@@ -5,13 +5,16 @@
 ##################################################
 iniciarWiFi (){
     echo "$(date +%T) - subindo a rede..."
+    echo "$(date +%T) - subindo a rede..." >> /var/log/rede-wifi.log
     ip link set $dispositivo up
 
     echo "$(date +%T) - Iniciando o wpa_supplicant..."
+    echo "$(date +%T) - Iniciando o wpa_supplicant..." >> /var/log/rede-wifi.log
     wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
     echo "wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
 
     echo "$(date +%T) - rodando DHCP..."
+    echo "$(date +%T) - rodando DHCP..." >> /var/log/rede-wifi.log
     sleep 120 && dhcpcd $dispositivo
     sleep 3 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 }
@@ -106,6 +109,7 @@ do
     ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
     if [ -z ${ip} ]; then
         echo "$(date +%T) - Sem IP!!"
+        echo "$(date +%T) - Sem IP!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
         iniciarWiFi
         sleep 10
