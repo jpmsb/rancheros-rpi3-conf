@@ -1,19 +1,47 @@
 #!/bin/bash
 
-# Verificar se este script já não está sendo executado
-este_processo=`basename $0`
-for processo in `ps h -o pid -C $este_processo`; do
-        if [ $processo != $$ ]; then
-                echo "Já está em execução."
-                exit 0
-        else echo "Executando..."
-        fi
-done
+##################################################
+################## Funcoes #######################
+##################################################
+iniciarWiFi (){
+    echo "$(date +%T) - subindo a rede..."
+    ip link set $dispositivo up
 
-# Procedimentos para estabelecimento da conexão
-# bem como da reconexão em caso de perda
-. $1
+    echo "$(date +%T) - Iniciando o wpa_supplicant..."
+    wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
+    echo "wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
 
+    echo "$(date +%T) - rodando DHCP..."
+    sleep 120 && dhcpcd $dispositivo
+    sleep 3 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
+}
+
+
+
+verificarScript(){
+    # Verficar se este script esta rodando
+    echo "Verificando se este script já está sendo executado..."
+    este_processo=`basename $0`
+    for processo in `ps h -o pid -C $este_processo`; do
+            if [ $processo != $$ ]; then
+                    retorno=1
+                    exit 0
+            else retorno=0
+            fi
+    done
+}
+
+verificarWPA_supplicant(){
+    echo "Verificando se o wpa_supplicant já está sendo executado..."
+    ps cax | grep wpa_supplicant > /dev/null
+    if [ $? -eq 0 ]; then
+        retorno=1
+    else
+        retorno=0
+    fi
+}
+
+criar_wpa_supplicant_conf(){
 > $wpa_supplicant_conf
 
 if [ "$tipo" = "empresarial" ]; then
@@ -41,33 +69,49 @@ network={
 }
 EOF
 fi
+}
 
+##################################################
+# Arquivo com os dados
+. $1
+
+
+# Verificando se o intervalo de checagem foi definido
 if [ ! "$intervalo_de_checagem" ]; then
     echo "Falta definir o intervalo de checagem!!"
     exit 1
 fi
 
-iniciarWiFi (){
-    killall -9 wpa_supplicant
-    echo "Iniciando o wpa_supplicant..."
-    wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
-    # sleep 60 && dhcpcd $dispositivo
-    sleep 3 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
-}
 
-ip link set $dispositivo up
-iniciarWiFi
+# Verificar se o script ta rodando
+verificarScript
+if [ $retorno = 1 ]; then
+    echo "Ja ta rodando"
+    exit 0
+fi
 
+
+# Verificar se o wpa_supplicant está rodando
+verificarWPA_supplicant
+if [ $retorno = 0 ]; then
+    echo "Criando $wpa_supplicant_conf..."
+    criar_wpa_supplicant_conf
+  
+fi
+
+
+# Loop eterno para verificar se tem IP
 while (true)
 do
     ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
     if [ -z ${ip} ]; then
-        echo "Sem IP!!"
+        echo "$(date +%T) - Sem IP!!"
+        killall -9 wpa_supplicant
         iniciarWiFi
         sleep 10
 
     else 
         sleep $intervalo_de_checagem
-        echo "IP: $ip"
+        echo "$(date +%T) - IP: $ip"
     fi
 done
