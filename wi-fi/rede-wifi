@@ -6,6 +6,7 @@
 iniciarWiFi (){
     echo "$(date +%T) - subindo a rede..."
     echo "$(date +%T) - subindo a rede..." >> /var/log/rede-wifi.log
+    ip link set $dispositivo down
     ip link set $dispositivo up
 
     echo "$(date +%T) - Iniciando o wpa_supplicant..."
@@ -13,9 +14,13 @@ iniciarWiFi (){
     wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
     echo "wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
 
+    echo "$(date +%T) - Esperando 120 segundos para estabelecer a conexão."
+    echo "$(date +%T) - Esperando 120 segundos para estabelecer a conexão." >> /var/log/rede-wfi.log
+    sleep 120
+
     echo "$(date +%T) - rodando DHCP..."
     echo "$(date +%T) - rodando DHCP..." >> /var/log/rede-wifi.log
-    sleep 120 && dhcpcd $dispositivo
+    dhcpcd $dispositivo
     sleep 3 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 }
 
@@ -115,21 +120,29 @@ while (true)
 do
     ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
     ip_roteador=$(ip route | awk '/default/ { print $3 }' | head -n 1)
+    se_esta_conectado=$(iw $dispositivo link)
+    nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d " ")
     echo "$(date +%T) - IP do roteador: $ip_roteador"
+    echo "$(date +%T) - IP do roteador: $ip_roteador" >> /var/log/rede-wifi.log
 
     ping -c 2 $ip_roteador 2>&1 >/dev/null
     rping=$?
 
-    if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
-        echo "Resultado do ping $?"
-        echo "$(date +%T) - Sem IP!!"
-        echo "$(date +%T) - Sem IP!!" >> /var/log/rede-wifi.log
+    #if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
+    if [ "$se_esta_conectado" = "Not connected." ]; then
+        echo "$(date +%T) - Não está conectado!"
+        echo "$(date +%T) - Não está conectado!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
         iniciarWiFi
         sleep 10
 
+    elif [ -z ${ip} ]; then
+        dhcpcd $dispositivo
+        sleep 10
+
     else 
         sleep $intervalo_de_checagem
+        echo "$(date +%T) - SSID: $nome_da_rede"
         echo "$(date +%T) - IP da interface $dispositivo: $ip"
     fi
 done
