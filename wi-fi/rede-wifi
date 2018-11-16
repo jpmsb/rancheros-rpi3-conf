@@ -32,7 +32,7 @@ esperaConectar(){
     do
         fim=$(date +%s)
         tempo=$((fim - inicio))
-        if [ "$se_esta_conectado" != "Not connected." ] || [ "$tempo" -ne "120" ]; then
+        if [ "$se_esta_conectado" != "Not connected." ] || [ "$tempo" = "120" ]; then
             break
         
         fi
@@ -149,6 +149,7 @@ do
         echo "$(date +%T) - Não está conectado!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
         iniciarWiFi
+        esperaConectar
         sleep 10
 
     elif [ -z ${ip} ]; then
