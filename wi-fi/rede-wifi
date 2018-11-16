@@ -36,9 +36,16 @@ esperaConectar(){
         tempo=$((fim - inicio))
         echo "$(date +%T) - Tempo: $tempo"
         
-        if [ "$se_esta_conectado" != "Not connected." ] || [ "$tempo" = "120" ]; then
+        if [ "$se_esta_conectado" != "Not connected." ]; then
+            echo "Conectou!!"
+            echo "Conectou!!" >> /var/log/rede-wifi.log
             break
         
+        elif [ "$tempo" = "120" ]; then
+            echo "Tempo esgotado!!!"
+            echo "Tempo esgotado!!!" >> /var/log/rede-wifi.log
+            break
+            
         fi
         sleep 0.5
     done
