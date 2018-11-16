@@ -5,7 +5,7 @@
 ################## Funcoes #######################
 ##################################################
 iniciarWiFi (){
-    echo "Dentro de iniciarWifi: $se_esta_conectado"
+    echo "$(date +%T) - Dentro de iniciarWifi: $se_esta_conectado"
     echo "$(date +%T) - subindo a rede..."
     echo "$(date +%T) - subindo a rede..." >> /var/log/rede-wifi.log
     ip link set $dispositivo down
@@ -28,7 +28,8 @@ pegarIP(){
 
 esperaConectar(){
     inicio=$(date +%s)
-    while (true); do
+    while (true)
+    do
         fim=$(date +%s)
         tempo=$((fim - inicio))
         if [ "$se_esta_conectado" != "Not connected." ] || [ "$tempo" = "120" ]; then
