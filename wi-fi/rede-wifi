@@ -27,11 +27,15 @@ pegarIP(){
 
 
 esperaConectar(){
+    echo "$(date +%T) - Esperando a conexão ser estabelecida."
+    echo "$(date +%T) - Esperando a conexão ser estabelecida." >> /var/log/rede-wifi.log
     inicio=$(date +%s)
     while (true)
     do
         fim=$(date +%s)
         tempo=$((fim - inicio))
+        echo "$(date +%T) - Tempo: $tempo"
+        
         if [ "$se_esta_conectado" != "Not connected." ] || [ "$tempo" = "120" ]; then
             break
         
