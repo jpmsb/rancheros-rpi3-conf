@@ -140,7 +140,7 @@ do
     ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
     ip_roteador=$(ip route | awk '/default/ { print $3 }' | head -n 1)
     se_esta_conectado=$(iw $dispositivo link)
-    nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d " ")
+    nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d ":")
     DNS=$(cat /etc/resolv.conf)
     
     echo "$(date +%T) - IP do roteador: $ip_roteador"
@@ -166,7 +166,7 @@ do
 
     else 
         sleep $intervalo_de_checagem
-        echo "$(date +%T) - SSID: $nome_da_rede"
+        echo "$(date +%T) - SSID:$nome_da_rede"
         echo "$(date +%T) - IP da interface $dispositivo: $ip"
     fi
 done
