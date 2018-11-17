@@ -166,7 +166,7 @@ do
     #if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
     if [ "$se_esta_conectado" = "Not connected." ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!"
-        echo "$[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!!" >> /var/log/rede-wifi.log
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
         iniciarWiFi
         esperaConectar
