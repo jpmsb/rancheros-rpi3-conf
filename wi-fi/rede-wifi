@@ -1,49 +1,52 @@
 #!/bin/bash
-> /var/log/rede-wifi.log
 
 ##################################################
 ################## Funcoes #######################
 ##################################################
 iniciarWiFi (){
-    echo "$(date +%T) - Dentro de iniciarWifi: $se_esta_conectado"
-    echo "$(date +%T) - subindo a rede..."
-    echo "$(date +%T) - subindo a rede..." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Dentro de iniciarWifi: $se_esta_conectado"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - subindo a rede..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - subindo a rede..." >> /var/log/rede-wifi.log
     ip link set $dispositivo down
     ip link set $dispositivo up
 
-    echo "$(date +%T) - Iniciando o wpa_supplicant..."
-    echo "$(date +%T) - Iniciando o wpa_supplicant..." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Iniciando o wpa_supplicant..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Iniciando o wpa_supplicant..." >> /var/log/rede-wifi.log
     wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
     echo "wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"  >> /var/log/rede-wifi.log
 }
 
 
 pegarIP(){
-    echo "$(date +%T) - rodando DHCP..."
-    echo "$(date +%T) - rodando DHCP..." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - rodando DHCP..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - rodando DHCP..." >> /var/log/rede-wifi.log
     dhcpcd $dispositivo
     sleep 15 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
 }
 
 
 esperaConectar(){
-    echo "$(date +%T) - Esperando a conexão ser estabelecida."
-    echo "$(date +%T) - Esperando a conexão ser estabelecida." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Esperando a conexão ser estabelecida."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Esperando a conexão ser estabelecida." >> /var/log/rede-wifi.log
     inicio=$(date +%s)
     while (true)
     do
         fim=$(date +%s)
         tempo=$((fim - inicio))
-        echo "$(date +%T) - Tempo: $tempo"
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo: $tempo"
         
         if [ "$se_esta_conectado" != "Not connected." ]; then
-            echo "Conectou!!"
-            echo "Conectou!!" >> /var/log/rede-wifi.log
+            echo "[$(date +%d/%m/%Y) - $(date +%T)] - Conectou!!"
+            echo "[$(date +%d/%m/%Y) - $(date +%T)] - Conectou!!" >> /var/log/rede-wifi.log
+            
+            echo "[$(date +%d/%m/%Y) - $(date +%T)] - SSID:$nome_da_rede" >> /var/log/rede-wifi.log
+            echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP da interface $dispositivo: $ip" >> /var/log/rede-wifi.log
             break
         
         elif [ "$tempo" = "120" ]; then
-            echo "Tempo esgotado!!!"
-            echo "Tempo esgotado!!!" >> /var/log/rede-wifi.log
+            echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo esgotado!!!"
+            echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo esgotado!!!" >> /var/log/rede-wifi.log
             break
             
         fi
@@ -54,7 +57,7 @@ esperaConectar(){
 
 verificarScript(){
     # Verficar se este script esta rodando
-    echo "$(date +%T) - Verificando se este script já está sendo executado..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando se este script já está sendo executado..."
     este_processo=`basename $0`
     for processo in `ps h -o pid -C $este_processo`; do
             if [ $processo != $$ ]; then
@@ -66,7 +69,7 @@ verificarScript(){
 }
 
 verificarWPA_supplicant(){
-    echo "$(date +%T) - Verificando se o wpa_supplicant já está sendo executado..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando se o wpa_supplicant já está sendo executado..."
     ps cax | grep wpa_supplicant > /dev/null
     if [ $? -eq 0 ]; then
         retorno=1
@@ -112,7 +115,7 @@ fi
 
 # Verificando se o intervalo de checagem foi definido
 if [ ! "$intervalo_de_checagem" ]; then
-    echo "Falta definir o intervalo de checagem!!"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Falta definir o intervalo de checagem!!"
     exit 1
 fi
 
@@ -120,23 +123,28 @@ fi
 # Verificar se o script ta rodando
 verificarScript
 if [ $retorno = 1 ]; then
-    echo "$(date +%T) - Há outra instâcia em execução. Saindo..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há outra instâcia em execução. Saindo..."
     exit 0
 
 elif [ $retorno = 0 ]; then
-    echo "$(date +%T) - Executando..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Executando..."
 fi
+
+
+# Marcação no arquivo de log
+echo "##################################################" >> /var/log/rede-wifi.log
+echo "[$(date +%d/%m/%Y) - $(date +%T)] - Iniciando..." >> /var/log/rede-wifi.log
 
 
 # Verificar se o wpa_supplicant está rodando
 verificarWPA_supplicant
 if [ $retorno = 0 ]; then
-    echo "$(date +%T) - wpa_supplicant não está em execução."
-    echo "$(date +%T) - Criando $wpa_supplicant_conf..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant não está em execução."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Criando $wpa_supplicant_conf..."
     criar_wpa_supplicant_conf
 
 elif [ $retorno = 1 ]; then
-    echo "$(date +%T) - wpa_supplicant já está sendo executado. Pulando..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..."
   
 fi
 
@@ -150,15 +158,15 @@ do
     nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d ":")
     DNS=$(cat /etc/resolv.conf)
     
-    echo "$(date +%T) - IP do roteador: $ip_roteador"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP do roteador: $ip_roteador"
 
     ping -c 2 $ip_roteador 2>&1 >/dev/null
     rping=$?
 
     #if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
     if [ "$se_esta_conectado" = "Not connected." ]; then
-        echo "$(date +%T) - Não está conectado!"
-        echo "$(date +%T) - Não está conectado!!" >> /var/log/rede-wifi.log
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!"
+        echo "$[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
         iniciarWiFi
         esperaConectar
@@ -169,11 +177,13 @@ do
         sleep 10
 
     elif [ "$DNS" != "nameserver 8.8.8.8" ]; then
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Adicionando o DNS."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Adicionando o DNS." >> /var/log/rede-wifi.log
         echo "nameserver 8.8.8.8" > /etc/resolv.conf
 
     else 
         sleep $intervalo_de_checagem
-        echo "$(date +%T) - SSID:$nome_da_rede"
-        echo "$(date +%T) - IP da interface $dispositivo: $ip"
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - SSID:$nome_da_rede"
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP da interface $dispositivo: $ip"
     fi
 done
