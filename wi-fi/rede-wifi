@@ -23,6 +23,9 @@ pegarIP(){
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - rodando DHCP..." >> /var/log/rede-wifi.log
     dhcpcd $dispositivo
     sleep 15 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    
+    ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP da interface $dispositivo: $ip"
 }
 
 
@@ -41,10 +44,8 @@ esperaConectar(){
             echo "[$(date +%d/%m/%Y) - $(date +%T)] - Conectou!!"
             echo "[$(date +%d/%m/%Y) - $(date +%T)] - Conectou!!" >> /var/log/rede-wifi.log
             
-            ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
             nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d ":")
             echo "[$(date +%d/%m/%Y) - $(date +%T)] - SSID:$nome_da_rede" >> /var/log/rede-wifi.log
-            echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP da interface $dispositivo: $ip" >> /var/log/rede-wifi.log
             
             break
         
