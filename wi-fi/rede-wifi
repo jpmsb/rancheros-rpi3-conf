@@ -25,7 +25,7 @@ pegarIP(){
     sleep 15 && echo "nameserver 8.8.8.8" > /etc/resolv.conf
     
     ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP da interface $dispositivo: $ip"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP da interface $dispositivo: $ip" >> /var/log/rede-wifi.log
 }
 
 
@@ -146,10 +146,15 @@ verificarWPA_supplicant
 if [ $retorno = 0 ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant não está em execução."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Criando $wpa_supplicant_conf..."
+    
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant não está em execução." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Criando $wpa_supplicant_conf..." >> /var/log/rede-wifi.log
+    
     criar_wpa_supplicant_conf
 
 elif [ $retorno = 1 ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..." >> /var/log/rede-wifi.log
   
 fi
 
