@@ -13,7 +13,7 @@ iniciarWiFi (){
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Iniciando o wpa_supplicant..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Iniciando o wpa_supplicant..." >> /var/log/rede-wifi.log
     wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf
-    echo "wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant -B -D $driver -i $dispositivo -c $wpa_supplicant_conf"  >> /var/log/rede-wifi.log
 }
 
@@ -34,6 +34,7 @@ esperaConectar(){
     do
         fim=$(date +%s)
         tempo=$((fim - inicio))
+        se_esta_conectado=$(iw $dispositivo link)
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo: $tempo"
         
         if [ "$se_esta_conectado" != "Not connected." ]; then
