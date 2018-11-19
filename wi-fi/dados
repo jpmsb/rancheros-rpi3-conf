@@ -1,8 +1,9 @@
-usuario=
 dispositivo=wlan0
 driver=nl80211
 wpa_supplicant_conf=/etc/wpa_supplicant/wpa_supplicant.conf
 tipo=empresarial
+usuario=
 ssid=""
 psk=""
+DNS_desejado=""
 intervalo_de_checagem=5
