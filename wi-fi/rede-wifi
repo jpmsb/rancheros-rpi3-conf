@@ -166,14 +166,13 @@ do
     ip_roteador=$(ip route | awk '/default/ { print $3 }' | head -n 1)
     se_esta_conectado=$(iw $dispositivo link)
     nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d ":")
-    DNS=$(cat /etc/resolv.conf)
+    DNS_atual=$(cat /etc/resolv.conf)
     
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP do roteador: $ip_roteador"
 
     ping -c 2 $ip_roteador 2>&1 >/dev/null
     rping=$?
 
-    #if [ -z ${ip} ] || [ "$rping" -ne 0 ]; then
     if [ "$se_esta_conectado" = "Not connected." ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!!" >> /var/log/rede-wifi.log
@@ -186,10 +185,10 @@ do
         pegarIP
         sleep 10
 
-    elif [ "$DNS" != "nameserver 8.8.8.8" ]; then
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Adicionando o DNS."
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Adicionando o DNS." >> /var/log/rede-wifi.log
-        echo "nameserver 8.8.8.8" > /etc/resolv.conf
+    elif [ "$DNS_atual" != "nameserver $DNS_desejado" ]; then
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Adicionando o DNS $DNS_desejado."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Adicionando o DNS $DNS_desejado." >> /var/log/rede-wifi.log
+        echo "nameserver $DNS_desejado" > /etc/resolv.conf
 
     else 
         sleep $intervalo_de_checagem
