@@ -87,7 +87,7 @@ criar_wpa_supplicant_conf(){
 > $wpa_supplicant_conf
 
 if [ "$tipo" = "empresarial" ]; then
-	cat << EOF > $wpa_supplicant_conf
+	cat <<-EOF > $wpa_supplicant_conf
 	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 	network={
 	     ssid="$ssid"
