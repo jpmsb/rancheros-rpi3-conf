@@ -200,7 +200,7 @@ do
     ping -c 2 $ip_roteador 2>&1 >/dev/null
     rping=$?
 
-    if [ "$se_esta_conectado" = "Not connected." ]; then
+    if [ "$se_esta_conectado" = "Not connected." ] || [ "$rping" -ne "0" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!!" >> /var/log/rede-wifi.log
         killall -9 wpa_supplicant
