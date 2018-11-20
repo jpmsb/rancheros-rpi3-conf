@@ -117,6 +117,13 @@ fi
 # Arquivo com os dados
 . $1
 
+# Verifica se foi definido o nome da rede
+if [ -z ${ssid} ]; then
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não foi definido o nome da rede. Saindo..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não foi definido o nome da rede. Saindo..." >> /var/log/rede-wifi.log
+    exit 1
+fi
+
 
 # Verificando se o intervalo de checagem foi definido
 if [ ! "$intervalo_de_checagem" ]; then
