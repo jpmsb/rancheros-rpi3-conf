@@ -1,9 +1,26 @@
+# Dispositivo de rede que será usado
 dispositivo=wlan0
+
+# Tipo do driver usado: wext, nl80211
 driver=nl80211
+
+# Caminho do arquivo de configuração do wpa_supplicant
 wpa_supplicant_conf=/etc/wpa_supplicant/wpa_supplicant.conf
+
+# Tipo de rede wpa2: pessoal, empresarial
 tipo=empresarial
+
+# Usuário caso tipo empresarial seja usado
 usuario=
+
+# Nome da rede. Caso em branco, desativa o script.
 ssid=""
+
+# Senha da rede Wi-Fi
 psk=""
+
+# Servidor de nomes
 DNS_desejado=""
+
+# Intervalo de verificação de conectividade da rede
 intervalo_de_checagem=5
