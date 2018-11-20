@@ -87,19 +87,19 @@ criar_wpa_supplicant_conf(){
 > $wpa_supplicant_conf
 
 if [ "$tipo" = "empresarial" ]; then
-cat << EOF > $wpa_supplicant_conf
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-network={
-     ssid="$ssid"
-     scan_ssid=1
-     key_mgmt=WPA-EAP
-     eap=PEAP
-     identity="$usuario"
-     password="$psk"
-     phase1="peaplabel=0"
-     phase2="auth=MSCHAPV2"
-}
-EOF
+	cat << EOF > $wpa_supplicant_conf
+	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+	network={
+	     ssid="$ssid"
+	     scan_ssid=1
+	     key_mgmt=WPA-EAP
+	     eap=PEAP
+	     identity="$usuario"
+	     password="$psk"
+	     phase1="peaplabel=0"
+	     phase2="auth=MSCHAPV2"
+	}
+	EOF
 
 elif [ "$tipo" = "pessoal" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Testando se a senha é criptografada..."
@@ -108,14 +108,14 @@ elif [ "$tipo" = "pessoal" ]; then
     if [ "$senha_wpa" = "Passphrase must be 8..63 characters" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)" >> /var/log/rede-wifi.log
-		cat <<-EOF > $wpa_supplicant_conf
-		ctrl_interface=/run/wpa_supplicant
-		update_config=1
-		network={
-		        ssid="$ssid"
-		        psk=$psk
-		}
-		EOF
+	cat <<-EOF > $wpa_supplicant_conf
+	ctrl_interface=/run/wpa_supplicant
+	update_config=1
+	network={
+	        ssid="$ssid"
+	        psk=$psk
+	}
+	EOF
     else
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não está criptografada!! Faça isso o quanto antes!!"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não está criptografada!! Faça isso o quanto antes!!" >> /var/log/rede-wifi.log
