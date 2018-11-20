@@ -4,9 +4,8 @@
 ################## Funcoes #######################
 ##################################################
 iniciarWiFi (){
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Dentro de iniciarWifi: $se_esta_conectado"
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - subindo a rede..."
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - subindo a rede..." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Subindo a rede..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Subindo a rede..." >> /var/log/rede-wifi.log
     ip link set $dispositivo down
     ip link set $dispositivo up
 
