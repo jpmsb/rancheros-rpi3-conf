@@ -129,11 +129,16 @@ fi
 # Arquivo com os dados
 . $1
 
-# Verifica se foi definido o nome da rede
+# Verifica se foi definido o nome da rede. Quando o tipo for empresarial, verifica se o nome de usuário foi definido.
 if [ -z "${ssid}" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não foi definido o nome da rede. Saindo..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não foi definido o nome da rede. Saindo..." >> /var/log/rede-wifi.log
     exit 1
+elif [ "$tipo" = "empresarial" ] && [ -z "${usuario}" ]; then
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - O tipo é empresarial mas não há nome de usuário definido!"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - O tipo é empresarial mas não há nome de usuário definido!" >> /var/log/rede-wifi.log
+    exit 1
+    
 else
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Rede alvo: $ssid
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Rede alvo: $ssid >> /var/log/rede-wifi.log
