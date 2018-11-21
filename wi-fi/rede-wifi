@@ -197,6 +197,9 @@ do
     DNS_atual=$(cat /etc/resolv.conf)
     
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP do roteador: $ip_roteador"
+    
+    ping -c 2 $ip_roteador 2>&1 >/dev/null
+    rping=$?
 
     if [ "$se_esta_conectado" = "Not connected." ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!"
@@ -206,7 +209,7 @@ do
         esperaConectar
         sleep 5
 
-    elif [ -z ${ip} ]; then
+    elif [ -z ${ip} ] || [ "$rping" -ne "0"; then
         pegarIP
         sleep 10
 
