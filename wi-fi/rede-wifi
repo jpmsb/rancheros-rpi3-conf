@@ -44,6 +44,7 @@ esperaConectar(){
             echo "[$(date +%d/%m/%Y) - $(date +%T)] - Conectou!!" >> /var/log/rede-wifi.log
             
             nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d ":")
+	    echo "[$(date +%d/%m/%Y) - $(date +%T)] - SSID:$nome_da_rede"
             echo "[$(date +%d/%m/%Y) - $(date +%T)] - SSID:$nome_da_rede" >> /var/log/rede-wifi.log
             
             break
@@ -206,7 +207,7 @@ do
         killall -9 wpa_supplicant
         iniciarWiFi
         esperaConectar
-        sleep 10
+        sleep 5
 
     elif [ -z ${ip} ]; then
         pegarIP
