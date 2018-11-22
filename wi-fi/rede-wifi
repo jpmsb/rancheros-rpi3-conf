@@ -4,8 +4,8 @@
 ################## Funcoes #######################
 ##################################################
 iniciarWiFi (){
-    echo "Finalizando a instância do wpa_supplicant (caso haja)..."
-    echo "Finalizando a instância do wpa_supplicant (caso haja)..." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Finalizando a instância do wpa_supplicant (caso haja)..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Finalizando a instância do wpa_supplicant (caso haja)..." >> /var/log/rede-wifi.log
     killall -9 wpa_supplicant
 
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Subindo a rede..."
@@ -194,11 +194,11 @@ elif [ $retorno = 1 ]; then
     criar_wpa_supplicant_conf $arquivo_temporario
     comparacao=$(diff $wpa_supplicant_conf $arquivo_temporario)
     if [ -z "${comparacao}" ]; then
-        echo "Arquivo de configuração é condizente com os dados."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados."
 	
     else
-        echo "Há divergências entre o arquivo de configuração atual e o dados de entrada."
-        echo "Recriando $wpa_supplicant_conf..."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..."
 	criar_wpa_supplicant_conf $wpa_supplicant_conf
 
     fi
