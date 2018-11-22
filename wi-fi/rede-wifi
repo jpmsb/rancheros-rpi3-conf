@@ -88,8 +88,6 @@ verificarWPA_supplicant(){
 }
 
 criar_wpa_supplicant_conf(){
-> $wpa_supplicant_conf
-
 destino=$1
 
 if [ "$tipo" = "empresarial" ]; then
