@@ -4,6 +4,10 @@
 ################## Funcoes #######################
 ##################################################
 iniciarWiFi (){
+    echo "Finalizando a instância do wpa_supplicant (caso haja)..."
+    echo "Finalizando a instância do wpa_supplicant (caso haja)..." >> /var/log/rede-wifi.log
+    killall -9 wpa_supplicant
+
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Subindo a rede..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Subindo a rede..." >> /var/log/rede-wifi.log
     ip link set $dispositivo down
@@ -86,8 +90,10 @@ verificarWPA_supplicant(){
 criar_wpa_supplicant_conf(){
 > $wpa_supplicant_conf
 
+destino=$1
+
 if [ "$tipo" = "empresarial" ]; then
-	cat <<-EOF > $wpa_supplicant_conf
+	cat <<-EOF > $destino
 	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 	network={
 	     ssid="$ssid"
@@ -108,7 +114,7 @@ elif [ "$tipo" = "pessoal" ]; then
     if [ "$senha_wpa" = "Passphrase must be 8..63 characters" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)" >> /var/log/rede-wifi.log
-	cat <<-EOF > $wpa_supplicant_conf
+	cat <<-EOF > $destino
 	ctrl_interface=/run/wpa_supplicant
 	update_config=1
 	network={
@@ -119,9 +125,9 @@ elif [ "$tipo" = "pessoal" ]; then
     else
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não está criptografada!! Faça isso o quanto antes!!"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não está criptografada!! Faça isso o quanto antes!!" >> /var/log/rede-wifi.log
-        echo "ctrl_interface=/run/wpa_supplicant" > $wpa_supplicant_conf
-        echo "update_config=1" >> $wpa_supplicant_conf
-        wpa_passphrase "$ssid" "$psk" >> $wpa_supplicant_conf
+        echo "ctrl_interface=/run/wpa_supplicant" > $destino
+        echo "update_config=1" >> $destino
+        wpa_passphrase "$ssid" "$psk" >> $destino
     fi
 fi
 }
@@ -178,12 +184,25 @@ if [ $retorno = 0 ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant não está em execução." >> /var/log/rede-wifi.log
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Criando $wpa_supplicant_conf..." >> /var/log/rede-wifi.log
     
-    criar_wpa_supplicant_conf
+    criar_wpa_supplicant_conf $wpa_supplicant_conf
 
 elif [ $retorno = 1 ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..." >> /var/log/rede-wifi.log
-  
+    
+    arquivo_temporario=$(mktemp /tmp/kflj.XXXXXXX)
+    criar_wpa_supplicant_conf $arquivo_temporario
+    comparacao=$(diff $wpa_supplicant_conf $arquivo_temporario)
+    if [ -z "${comparacao}" ]; then
+        echo "Arquivo de configuração é condizente com os dados."
+	
+    else
+        echo "Há divergências entre o arquivo de configuração atual e o dados de entrada."
+        echo "Recriando $wpa_supplicant_conf..."
+	criar_wpa_supplicant_conf $wpa_supplicant_conf
+
+    fi
+    rm -r $arquivo_temporario
 fi
 
 
@@ -204,7 +223,6 @@ do
     if [ "$se_esta_conectado" = "Not connected." ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não está conectado!!" >> /var/log/rede-wifi.log
-        killall -9 wpa_supplicant
         iniciarWiFi
         esperaConectar
         sleep 5
