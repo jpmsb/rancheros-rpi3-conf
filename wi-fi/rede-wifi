@@ -208,7 +208,7 @@ elif [ $retorno = 1 ]; then
 	iniciarWiFi
 
     fi
-    rm -r $arquivo_temporario
+    rm -r /tmp/kflj.*
 fi
 
 
