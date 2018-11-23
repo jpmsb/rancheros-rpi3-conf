@@ -256,9 +256,25 @@ do
         esperaConectar
         sleep 5
 
-    elif [ -z ${ip} ] || [ "$rping" -ne "0" ]; then
+    elif [ -z ${ip} ]; then
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Interface $dispositivo sem endereço IP!"
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Interface $dispositivo sem endereço IP!" >> /var/log/rede-wifi.log
+	
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Obtendo endereço IP..."
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Obtendo endereço IP..." >> /var/log/rede-wifi.log
+	
         pegarIP
         sleep 10
+	
+    elif [ "$rping" -ne "0" ]; then
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: Não foi possível pingar o roteador $ip_roteador!"
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: Não foi possível pingar o roteador $ip_roteador!" >> /var/log/rede-wifi.log
+	
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Obtendo endereço IP..."
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Obtendo endereço IP..." >> /var/log/rede-wifi.log
+	
+	pegarIP
+	sleep 10
 
     elif [ "$DNS_atual" != "nameserver $DNS_desejado" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Adicionando o DNS $DNS_desejado."
