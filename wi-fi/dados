@@ -8,10 +8,10 @@ driver=nl80211
 wpa_supplicant_conf=/etc/wpa_supplicant/wpa_supplicant.conf
 
 # Tipo de rede wpa2: pessoal, empresarial
-tipo=empresarial
+tipo=""
 
 # Usuário caso tipo empresarial seja usado
-usuario=
+usuario=""
 
 # Nome da rede. Caso em branco, desativa o script.
 ssid=""
