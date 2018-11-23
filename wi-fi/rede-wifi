@@ -193,11 +193,19 @@ elif [ $retorno = 1 ]; then
     comparacao=$(diff $wpa_supplicant_conf $arquivo_temporario)
     if [ -z "${comparacao}" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados."
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados." >> /var/log/rede-wifi.log
 	
     else
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada."
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada." >> /var/log/rede-wifi.log
+	
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..."
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..." >> /var/log/rede-wifi.log
 	criar_wpa_supplicant_conf $wpa_supplicant_conf
+	
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..."
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..." >> /var/log/rede-wifi.log
+	iniciarWiFi
 
     fi
     rm -r $arquivo_temporario
