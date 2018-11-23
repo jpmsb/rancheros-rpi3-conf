@@ -95,8 +95,9 @@ destino=$1
 
 if [ "$tipo" = "empresarial" ]; then
     if [ -z "${psk}" ]; then
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não pode estar em branco!!"
-	echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não pode estar em branco!!" >> /var/log/rede-wifi.log
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: A senha não pode estar em branco!!"
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: A senha não pode estar em branco!!" >> /var/log/rede-wifi.log
+	exit 1
 	
     else
 	cat <<-EOF > $destino
@@ -158,23 +159,23 @@ fi
 
 # Verifica se foi definido o nome da rede. Quando o tipo for empresarial, verifica se o nome de usuário foi definido.
 if [ -z "${ssid}" ]; then
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não foi definido o nome da rede. Saindo..."
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Não foi definido o nome da rede. Saindo..." >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: Não foi definido o nome da rede. Saindo..."
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: Não foi definido o nome da rede. Saindo..." >> /var/log/rede-wifi.log
     exit 1
 elif [ "$tipo" = "empresarial" ] && [ -z "${usuario}" ]; then
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - O tipo é empresarial mas não há nome de usuário definido!"
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - O tipo é empresarial mas não há nome de usuário definido!" >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: O tipo é empresarial mas não há nome de usuário definido!"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: O tipo é empresarial mas não há nome de usuário definido!" >> /var/log/rede-wifi.log
     exit 1
     
 else
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Rede alvo: $ssid
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Rede alvo: $ssid >> /var/log/rede-wifi.log
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Rede alvo: $ssid"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Rede alvo: $ssid" >> /var/log/rede-wifi.log
 fi
 
 
 # Verificando se o intervalo de checagem foi definido
 if [ ! "$intervalo_de_checagem" ]; then
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Falta definir o intervalo de checagem!!"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: Falta definir o intervalo de checagem!!"
     exit 1
 fi
 
