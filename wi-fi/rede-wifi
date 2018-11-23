@@ -112,7 +112,8 @@ if [ "$tipo" = "empresarial" ]; then
 	     phase2="auth=MSCHAPV2"
 	}
 	EOF
-
+    fi
+    
 elif [ "$tipo" = "pessoal" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Testando se a senha é criptografada..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Testando se a senha é criptografada..." >> /var/log/rede-wifi.log
