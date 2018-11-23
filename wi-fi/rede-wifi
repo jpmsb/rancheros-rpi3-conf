@@ -47,8 +47,8 @@ esperaConectar(){
             echo "[$(date +%d/%m/%Y) - $(date +%T)] - Conectou!!"
             echo "[$(date +%d/%m/%Y) - $(date +%T)] - Conectou!!" >> /var/log/rede-wifi.log
 	    
-	    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo de decorrido: $tempo segundos"
-	    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo de decorrido: $tempo segundos" >> /var/log/rede-wifi.log
+	    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo decorrido: $tempo segundos"
+	    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Tempo decorrido: $tempo segundos" >> /var/log/rede-wifi.log
             
             nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d ":")
 	    echo "[$(date +%d/%m/%Y) - $(date +%T)] - SSID:$nome_da_rede"
