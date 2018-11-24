@@ -207,8 +207,8 @@ if [ "$(verificarScript)" = "1" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando a configuração atual..."
     
     if [ "$(verificar_configuracao)" = "igual" ]; then
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais."
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais." >> /var/log/rede-wifi.log
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais. Saindo..."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais. Saindo..." >> /var/log/rede-wifi.log
 	
     elif [ "$(verificar_configuracao)" = "diferente" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada."
@@ -221,7 +221,11 @@ if [ "$(verificarScript)" = "1" ]; then
 	
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..."
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..." >> /var/log/rede-wifi.log
+	
         ip link set $dispositivo down
+	
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Saindo..."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Saindo..." >> /var/log/rede-wifi.log	
 	
     fi
     exit 0
