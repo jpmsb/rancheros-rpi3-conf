@@ -69,7 +69,6 @@ esperaConectar(){
 
 verificarScript(){
     # Verficar se este script esta rodando
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando se este script já está sendo executado..."
     este_processo=`basename $0`
     for processo in `ps h -o pid -C $este_processo`; do
         if [ $processo != $$ ]; then
@@ -84,7 +83,6 @@ verificarScript(){
 }
 
 verificarWPA_supplicant(){
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando se o wpa_supplicant já está sendo executado..."
     ps cax | grep wpa_supplicant > /dev/null
     if [ $? -eq 0 ]; then
         local resultado="1"
@@ -205,15 +203,15 @@ fi
 
 # Verificar se o script ta rodando
 echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando se este script já está sendo executado..."
-if [ $(verificarScript) = "1" ]; then
+if [ "$(verificarScript)" = "1" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há outra instâcia em execução."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando a configuração atual..."
     
-    if [ $(verificar_configuracao) = "igual" ]; then
+    if [ "$(verificar_configuracao)" = "igual" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais."
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais." >> /var/log/rede-wifi.log
 	
-    elif [ $(verificar_configuracao) = "diferente" ]; then
+    elif [ "$(verificar_configuracao)" = "diferente" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada."
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada." >> /var/log/rede-wifi.log
 	
@@ -229,7 +227,7 @@ if [ $(verificarScript) = "1" ]; then
     fi
     exit 0
 
-elif [ $(verificarScript) = "0" ]; then
+elif [ "$(verificarScript)" = "0" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Executando..."
 fi
 
@@ -240,8 +238,8 @@ echo "[$(date +%d/%m/%Y) - $(date +%T)] - Iniciando..." >> /var/log/rede-wifi.lo
 
 
 # Verificar se o wpa_supplicant está rodando
-verificarWPA_supplicant
-if [ $(verificarWPA_supplicant) = "0" ]; then
+echo "[$(date +%d/%m/%Y) - $(date +%T)] - Verificando se o wpa_supplicant já está sendo executado..."
+if [ "$(verificarWPA_supplicant)" = "0" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant não está em execução."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Criando $wpa_supplicant_conf..."
     
@@ -250,7 +248,7 @@ if [ $(verificarWPA_supplicant) = "0" ]; then
     
     criar_wpa_supplicant_conf $wpa_supplicant_conf
 
-elif [ $(verificarWPA_supplicant) = "1" ]; then
+elif [ "$(verificarWPA_supplicant)" = "1" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..." >> /var/log/rede-wifi.log
 
