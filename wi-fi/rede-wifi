@@ -4,9 +4,7 @@
 ################## Funcoes #######################
 ##################################################
 iniciarWiFi (){
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Finalizando a instância do wpa_supplicant (caso haja)..."
-    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Finalizando a instância do wpa_supplicant (caso haja)..." >> /var/log/rede-wifi.log
-    killall -9 wpa_supplicant
+    killall -9 wpa_supplicant > /dev/null 2>&1
 
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Subindo a rede..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Subindo a rede..." >> /var/log/rede-wifi.log
@@ -212,7 +210,6 @@ if [ "$(verificarScript)" = "1" ]; then
 	
     elif [ "$(verificar_configuracao)" = "diferente" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada."
-	
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..."
 
         criar_wpa_supplicant_conf $wpa_supplicant_conf
