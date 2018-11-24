@@ -90,6 +90,7 @@ verificarWPA_supplicant(){
     fi
 }
 
+
 criar_wpa_supplicant_conf(){
 destino=$1
 
@@ -153,6 +154,31 @@ elif [ "$tipo" = "pessoal" ]; then
 fi
 }
 
+
+verificar_configuracao(){
+    arquivo_temporario=$(mktemp /tmp/kflj.XXXXXXX)
+    criar_wpa_supplicant_conf $arquivo_temporario
+    comparacao=$(diff $wpa_supplicant_conf $arquivo_temporario)
+    if [ -z "${comparacao}" ]; then
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais." >> /var/log/rede-wifi.log
+	
+    else
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada." >> /var/log/rede-wifi.log
+	
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..." >> /var/log/rede-wifi.log
+	criar_wpa_supplicant_conf $wpa_supplicant_conf
+	
+	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..."
+        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..." >> /var/log/rede-wifi.log
+	iniciarWiFi
+
+    fi
+    rm -r /tmp/kflj.*
+}
+
 ##################################################
 # Arquivo com os dados
 . $1
@@ -210,28 +236,7 @@ if [ $retorno = 0 ]; then
 elif [ $retorno = 1 ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - wpa_supplicant já está sendo executado. Pulando..." >> /var/log/rede-wifi.log
-    
-    arquivo_temporario=$(mktemp /tmp/kflj.XXXXXXX)
-    criar_wpa_supplicant_conf $arquivo_temporario
-    comparacao=$(diff $wpa_supplicant_conf $arquivo_temporario)
-    if [ -z "${comparacao}" ]; then
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais."
-	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Arquivo de configuração é condizente com os dados atuais." >> /var/log/rede-wifi.log
-	
-    else
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada."
-	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Há divergências entre o arquivo de configuração atual e o dados de entrada." >> /var/log/rede-wifi.log
-	
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..."
-	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Recriando $wpa_supplicant_conf..." >> /var/log/rede-wifi.log
-	criar_wpa_supplicant_conf $wpa_supplicant_conf
-	
-	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..."
-	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Reiniciando a conexão de rede..." >> /var/log/rede-wifi.log
-	iniciarWiFi
 
-    fi
-    rm -r /tmp/kflj.*
 fi
 
 
