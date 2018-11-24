@@ -74,6 +74,7 @@ verificarScript(){
         if [ $processo != $$ ]; then
             local resultado="1"
 	    echo "$resultado"
+	    exit 0
         else
 	    local resultado="0"
 	    echo "$resultado"
@@ -98,12 +99,6 @@ criar_wpa_supplicant_conf(){
 destino=$1
 
 if [ "$tipo" = "empresarial" ]; then
-    if [ -z "${psk}" ]; then
-        echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: A senha não pode estar em branco!!"
-	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: A senha não pode estar em branco!!" >> /var/log/rede-wifi.log
-	exit 1
-	
-    else
 	cat <<-EOF > $destino
 	ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 	network={
@@ -117,7 +112,6 @@ if [ "$tipo" = "empresarial" ]; then
 	     phase2="auth=MSCHAPV2"
 	}
 	EOF
-    fi
     
 elif [ "$tipo" = "pessoal" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Testando se a senha é criptografada..."
@@ -186,6 +180,11 @@ if [ -z "${ssid}" ]; then
 elif [ "$tipo" = "empresarial" ] && [ -z "${usuario}" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: O tipo é empresarial mas não há nome de usuário definido!"
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: O tipo é empresarial mas não há nome de usuário definido!" >> /var/log/rede-wifi.log
+    exit 1
+
+elif [ "$tipo" = "empresarial" ] && [ -z "${psk}" ]; then
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: O tipo é empresarial mas não há senha definida!"
+    echo "[$(date +%d/%m/%Y) - $(date +%T)] - Erro: O tipo é empresarial mas não há senha definida!" >> /var/log/rede-wifi.log
     exit 1
     
 else
