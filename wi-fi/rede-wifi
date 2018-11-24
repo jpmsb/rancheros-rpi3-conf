@@ -154,7 +154,7 @@ fi
 
 verificar_configuracao(){
     arquivo_temporario=$(mktemp /tmp/kflj.XXXXXXX)
-    criar_wpa_supplicant_conf $arquivo_temporario > dev/null 2>&1
+    criar_wpa_supplicant_conf $arquivo_temporario > /dev/null 2>&1
     comparacao=$(diff $wpa_supplicant_conf $arquivo_temporario)
     if [ -z "${comparacao}" ]; then
         local resultado="igual"
