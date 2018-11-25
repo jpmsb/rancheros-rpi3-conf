@@ -95,11 +95,11 @@ verificarWPA_supplicant(){
 
 verificarSenha(){
     local senha_wpa=$(wpa_passphrase "$ssid" "$psk")
-    if [ -z "${psk}" ] && [ "senha_wpa" = "Passphrase must be 8..63 characters" ]; then
+    if [ -z "${psk}" ] && [ "$senha_wpa" = "Passphrase must be 8..63 characters" ]; then
         local resultado="sem_senha"
 	echo "$resultado"
 
-   elif [ "senha_wpa" = "Passphrase must be 8..63 characters" ]; then
+   elif [ "$senha_wpa" = "Passphrase must be 8..63 characters" ]; then
         local resultado="senha_criptografada"
 	echo "$resultado"
 
