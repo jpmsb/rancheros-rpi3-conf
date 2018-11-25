@@ -163,6 +163,7 @@ elif [ "$tipo" = "pessoal" ]; then
         echo "ctrl_interface=/run/wpa_supplicant" > $destino
         echo "update_config=1" >> $destino
         wpa_passphrase "$ssid" "$psk" >> $destino
+	sed '5d' $destino
     fi
 fi
 }
