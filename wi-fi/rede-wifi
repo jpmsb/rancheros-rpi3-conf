@@ -146,7 +146,7 @@ elif [ "$tipo" = "pessoal" ]; then
 	}
 	EOF
 
-    elif [ "$(verificarSenha)" = "Passphrase must be 8..63 characters" ]; then
+    elif [ "$(verificarSenha)" = "senha_criptografada" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)" >> /var/log/rede-wifi.log
 	cat <<-EOF > $destino
