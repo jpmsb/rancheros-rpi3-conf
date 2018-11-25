@@ -93,6 +93,24 @@ verificarWPA_supplicant(){
 }
 
 
+verificarSenha(){
+    local senha_wpa=$(wpa_passphrase "$ssid" "$psk")
+    if [ -z "${psk}" ] && [ "senha_wpa" = "Passphrase must be 8..63 characters" ]; then
+        local resultado="sem_senha"
+	echo "$resultado"
+
+   elif [ "senha_wpa" = "Passphrase must be 8..63 characters" ]; then
+        local resultado="senha_criptografada"
+	echo "$resultado"
+
+   else
+        local resultado="sem_criptografia"
+	echo "$resultado"
+	
+   fi
+}
+
+
 criar_wpa_supplicant_conf(){
 destino=$1
 
@@ -114,8 +132,8 @@ if [ "$tipo" = "empresarial" ]; then
 elif [ "$tipo" = "pessoal" ]; then
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Testando se a senha é criptografada..."
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - Testando se a senha é criptografada..." >> /var/log/rede-wifi.log
-    senha_wpa=$(wpa_passphrase "$ssid" "$psk")
-    if [ -z "${psk}" ] && [ "$senha_wpa" = "Passphrase must be 8..63 characters" ]; then
+    
+    if [ "$(verificarSenha)" = "sem_senha" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - Atenção: criando arquivo de configuração para rede desprotegida."
 	echo "[$(date +%d/%m/%Y) - $(date +%T)] - Atenção: criando arquivo de configuração para rede desprotegida." >> /var/log/rede-wifi.log
 	
@@ -128,7 +146,7 @@ elif [ "$tipo" = "pessoal" ]; then
 	}
 	EOF
 
-    elif [ "$senha_wpa" = "Passphrase must be 8..63 characters" ]; then
+    elif [ "$(verificarSenha)" = "Passphrase must be 8..63 characters" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha é criptografada!! Isso é ótimo!! :)" >> /var/log/rede-wifi.log
 	cat <<-EOF > $destino
@@ -139,7 +157,7 @@ elif [ "$tipo" = "pessoal" ]; then
 	        psk=$psk
 	}
 	EOF
-    else
+    elif [ "$(verificarSenha)" = "sem_criptografia" ]; then
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não está criptografada!! Faça isso o quanto antes!!"
         echo "[$(date +%d/%m/%Y) - $(date +%T)] - A senha não está criptografada!! Faça isso o quanto antes!!" >> /var/log/rede-wifi.log
         echo "ctrl_interface=/run/wpa_supplicant" > $destino
