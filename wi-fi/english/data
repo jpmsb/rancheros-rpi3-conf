@@ -1,0 +1,26 @@
+# Specify the network device that will be used
+device=wlan0
+
+# The driver that will be used: wext, nl80211
+driver=nl80211
+
+# wpa_supplicant configuration file path
+wpa_supplicant_conf=/etc/wpa_supplicant/wpa_supplicant.conf
+
+# wpa2 network type: personal, enterprise
+type=""
+
+# Username in case of enterprise type being used
+user=""
+
+# Network name, if not present, the script is disabled
+ssid=""
+
+# The password
+psk=""
+
+# The name server
+desired_DNS=""
+
+# Network connectivity chceck interval in seconds
+check_interval=5
