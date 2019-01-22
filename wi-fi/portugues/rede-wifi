@@ -186,6 +186,29 @@ verificar_configuracao(){
     rm -r /tmp/kflj.*
 }
 
+controle_de_pino(){
+    local pino=$1
+    local estado=$2
+
+    test -e /sys/class/gpio/gpio$pino/value
+    local pino_existe=$?
+
+    if [ "$pino_existe" -ne "0" ]; then
+        echo $pino > /sys/class/gpio/export 
+        echo out > /sys/class/gpio/gpio$pino/direction
+
+    fi
+    
+    if [ "$estado" = "liga" ]; then
+        echo 1 > /sys/class/gpio/gpio$pino/value
+
+    elif [ "$estado" = "desliga" ]; then
+        echo 0 > /sys/class/gpio/gpio$pino/value
+
+    fi
+
+}
+
 ##################################################
 # Arquivo com os dados
 . $1
