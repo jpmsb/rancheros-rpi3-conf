@@ -302,7 +302,7 @@ do
     ip=$(ip -4 addr show dev $dispositivo | grep inet |cut -d" " -f6 | head -n 1)
     ip_roteador=$(ip route | awk '/default/ { print $3 }' | head -n 1)
     se_esta_conectado=$(iw $dispositivo link)
-    nome_da_rede=$(iw wlan0 link |grep SSID |cut -f2 -d ":")
+    nome_da_rede=$(iw $dispositivo link |grep SSID |cut -f2 -d ":")
     DNS_atual=$(cat /etc/resolv.conf)
     
     echo "[$(date +%d/%m/%Y) - $(date +%T)] - IP do roteador: $ip_roteador"
